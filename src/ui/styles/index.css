@@ -1,0 +1,72 @@
+@import './reset.css';
+
+@font-face {
+  font-family: inter;
+  src: url('../assets/fonts/inter.ttf');
+}
+
+:root {
+  --primary-color: rgba(255 255 255 / 50%);
+  --primary-color-gray: rgba(56 56 58 / 90%);
+  --secondary-color: #e6ffd8;
+  --secondary-color-gray: #7d7d7d;
+
+  /* standard platform size */
+  --desktop-width: 1024px;
+  --mobile-width: 430px;
+}
+
+/*
+  font style
+*/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: inter, serif;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.8rem;
+}
+
+div,
+p {
+  font-family: inter, serif;
+  font-size: 1.6rem;
+  text-align: justify;
+}
+
+html {
+  /* adjust default font-size to 10px = 1rem for easier mental calculation */
+  font-size: 62.5%;
+}
+
+body {
+  /* set default back to 16px for those element(s) do not use rem as relative sizing */
+  font-size: 1.6rem;
+  background-color: black;
+  min-width: 300px;
+  min-height: 300px;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: justify;
+  color: var(--secondary-color, white);
+  background-color: var(--primary-color, black);
+  transition: background-color 0.6s ease-in-out;
+}

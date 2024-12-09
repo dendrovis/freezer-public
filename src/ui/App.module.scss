@@ -1,0 +1,13 @@
+.container {
+  background-color: var(--primary-color);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  // follow dimension defined by plugin window
+  width: clamp(30rem, 100%, 30rem);
+  height: clamp(30rem, 100%, 30rem);
+}

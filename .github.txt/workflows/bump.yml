@@ -1,0 +1,79 @@
+# For any branch that merge to main branch, bump the version base on the branch prefix name
+name: bump pipeline
+
+run-name: ${{ github.actor }} bump
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'main'
+
+  # Allow manual trigger from github actions to test this pipeline
+  workflow_dispatch:
+
+jobs:
+  run:
+    if: ${{ github.event.pull_request.merged == true }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      # Install dependencies packages and cli
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Node  
+        uses: actions/setup-node@v4 
+        with:
+          node-version: 20
+      # Checks
+      - name: Sanity Check
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: | 
+          echo running sanity test...
+          echo "$BRANCH_NAME"
+          ls -l
+      # hotfix           - patch 0.0.1
+      # feature          - minor 0.1.0
+      # release          - major 1.0.0
+      # merge without squash - Merge pull request #X from $REPOSITORY_OWNER/feature/*
+      # merge with squash    - feature/*
+      - name: Bump Version
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
+          USERNAME: ${{ github.actor }}
+          ADDRESS_SUFFIX: users.noreply.github.com
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: |
+          git config user.name "$USERNAME"
+          git config user.email "$USERNAME@$ADDRESS_SUFFIX"
+          PATTERN_FEATURE="feature/.*$"
+          PATTERN_HOTFIX="(hotfix|dependabot)/.*$"
+          PATTERN_RELEASE="release/.*$"
+          if [[ "$BRANCH_NAME" =~ ${PATTERN_FEATURE} ]]; then
+          echo "feature commits for branch $PATTERN_FEATURE"
+          echo bump version
+          NEW_VERSION=$(npm version minor --no-git-tag-version)
+          git add .
+          git commit -m "Bump version to $NEW_VERSION"
+          git push
+          elif [[ "$BRANCH_NAME" =~ ${PATTERN_HOTFIX} ]]; then
+          echo "hotfix commits for branch $PATTERN_HOTFIX"
+          echo bump version 
+          NEW_VERSION=$(npm version patch --no-git-tag-version)
+          git add .
+          git commit -m "Bump version to $NEW_VERSION"
+          git push
+          elif [[ "$BRANCH_NAME" =~ ${PATTERN_RELEASE} ]]; then
+          echo "release commits for branch $PATTERN_RELEASE"
+          echo bump version
+          NEW_VERSION=$(npm version major --no-git-tag-version)
+          git add .
+          git commit -m "Bump version to $NEW_VERSION"
+          git push
+          else
+          echo "Invalid branch name"
+          exit 1 
+          fi

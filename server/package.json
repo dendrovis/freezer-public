@@ -1,0 +1,21 @@
+{
+  "name": "freezer-server",
+  "version": "0.0.0",
+  "description": "run headless chrome to generate pages from the given links",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "server": "node index.js",
+    "test": "echo test"
+  },
+  "keywords": [
+    "freezer"
+  ],
+  "author": "dendrovis team",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "puppeteer": "^23.10.1"
+  }
+}

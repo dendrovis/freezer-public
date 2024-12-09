@@ -1,0 +1,45 @@
+# pull request pipeline
+name: ci pipeline
+
+run-name: ${{ github.actor }} pull request
+
+on:
+  pull_request:
+    branches:
+      - '**'
+    branches_ignore:
+      - 'dependabot/*'
+
+  # Allow manual trigger from github actions to test this pipeline
+  workflow_dispatch:
+
+jobs:
+  run:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      # Install dependencies packages and cli
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Node  
+        uses: actions/setup-node@v4 
+        with:
+          node-version: 20
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install Dependencies
+        run: bun install
+      # Checks
+      - name: Sanity Check
+        run: | 
+          echo running sanity test...
+          ls -l
+      # Test
+      - name: Linter Test
+        run: bun run test:linter
+      - name: Build
+        run: bun run build
+      

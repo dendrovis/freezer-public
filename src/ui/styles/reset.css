@@ -1,0 +1,12 @@
+/* standard opinionated css */
+
+@import '../../../node_modules/modern-normalize/modern-normalize.css';
+
+/* further opinionated below */
+dialog {
+  border: none;
+}
+
+img {
+  user-select: none;
+}
